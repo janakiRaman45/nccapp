@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import { View, StyleSheet, Text, Button, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-
 
 const GridCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -29,6 +28,11 @@ const GridCalendar = () => {
   };
 
   const handleSubmit = () => {
+    if (selectedYears.length === 0 || selectedUniforms.length === 0) {
+      Alert.alert('Error', 'Please select .');
+      return;
+    }
+
     console.log('Selected Date:', selectedDate);
     console.log('Selected Years:', selectedYears);
     console.log('Selected Uniforms:', selectedUniforms);
@@ -37,7 +41,11 @@ const GridCalendar = () => {
 
   return (
     <View style={styles.container}>
-      <Calendar onDayPress={handleDayPress} style={styles.calendar} />
+      <Calendar
+        onDayPress={handleDayPress}
+        style={styles.calendar}
+        minDate={new Date().toISOString().split('T')[0]} // Set minDate to today's date
+      />
       {selectedDate && (
         <View style={styles.selectionContainer}>
           <Text>Date: {selectedDate}</Text>
@@ -92,6 +100,7 @@ const styles = StyleSheet.create({
     width: '90%',
     aspectRatio: 1,
     paddingBottom: 10,
+    fontWeight: 'bold',
   },
   selectionContainer: {
     marginTop: 20,

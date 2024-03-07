@@ -6,6 +6,7 @@ import Register from './screen/Register';
 import GridCalendar from './screen/calendar';
 import 'react-native-gesture-handler';
 import HomeScreen from './screen/Home';
+//import PDFViewer from './screen/pdf';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} options={{headershow: false}} />
         <Stack.Screen name="GridCalendar" component={GridCalendar} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} options={{headershow: false}} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
