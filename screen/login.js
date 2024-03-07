@@ -9,7 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        // Handle login logic here
+      navigation.navigate('HomeScreen');
     };
 
     const handleRegister = () => {
@@ -18,7 +18,7 @@ const Login = () => {
 
     const handleGuest = () => {
         console.log('Logging in as a guest...');
-        navigation.navigate('PDFViewer');
+        navigation.navigate('GridCalendar');
     }; 
 
     return (
