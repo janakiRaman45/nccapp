@@ -29,7 +29,7 @@ const GridCalendar = () => {
 
   const handleSubmit = () => {
     if (selectedYears.length === 0 || selectedUniforms.length === 0) {
-      Alert.alert('Error', 'Please select .');
+      Alert.alert('Error', 'Please select atleast one year and one dress code.');
       return;
     }
 
@@ -67,7 +67,7 @@ const GridCalendar = () => {
               color={selectedYears.includes('IIIrd Year') ? 'green' : 'red'}
             />
           </View>
-          <Text style={styles.title}>Uniforms:</Text>
+          <Text style={styles.title}>Dress Code:</Text>
           <View style={styles.optionsContainer}>
             <Button
               title="Uniform"
