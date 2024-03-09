@@ -18,7 +18,7 @@ const Login = () => {
 
     const handleGuest = () => {
         console.log('Logging in as a guest...');
-        navigation.navigate('GridCalendar');
+        navigation.navigate('UserCalendar');
     }; 
 
     return (

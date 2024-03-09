@@ -6,7 +6,9 @@ import Register from './screen/Register';
 import GridCalendar from './screen/calendar';
 import 'react-native-gesture-handler';
 import HomeScreen from './screen/Home';
-
+import ArmyRankGallery from './screen/ranks';
+import UserCalendar from './screen/aCallender';
+import AdminNewsPage from './screen/Anews';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +20,9 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} options={{headerShow: false}} />
         <Stack.Screen name="GridCalendar" component={GridCalendar} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} options={{headerShow: false}} />
-        
+        <Stack.Screen name="ArmyRankGallery" component={ArmyRankGallery} />
+        <Stack.Screen name="UserCalendar" component={UserCalendar} />
+        <Stack.Screen name="AdminNewsPage" component={AdminNewsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

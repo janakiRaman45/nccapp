@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import GridCalendar from "./calendar";
+import AdminNewsPage from "./Anews";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -75,6 +76,20 @@ const HomeScreen = () => {
                     disabled={route.name === 'GridCalendar'} // Disable option if already on the GridCalendar screen
                 >
                     <Text>Calendar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('ArmyRankGallery')}
+                    disabled={route.name === 'ArmyRankGallery'} // Disable option if already on the GridCalendar screen
+                >
+                    <Text>Army Rank</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('AdminNewsPage')}
+                    disabled={route.name ==='AdminNewsPage'} // Disable option if already on the GridCalendar screen
+                >
+                    <Text>News</Text>
                 </TouchableOpacity>
             </Animated.View>
         </SafeAreaView>
