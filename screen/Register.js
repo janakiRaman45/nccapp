@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+
+const UserContext = createContext();
+
+const UserProvider = ({ children }) => {
+  const [userData, setUserData] = useState({
+    name: '',
+    registerId: '',
+    nccCadetId: '',
+    dateOfBirth: '',
+    emailId: '',
+    phoneNumber: '',
+  });
+
+  return (
+    <UserContext.Provider value={{ userData, setUserData }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [registerId, setRegisterId] = useState('');
-  const [nccCadetId, setNccCadetId] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [emailId, setEmailId] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const navigation = useNavigation();
+  const { userData, setUserData } = useContext(UserContext);
+
+  const handleInputChange = (key, value) => {
+    setUserData(prevData => ({
+      ...prevData,
+      [key]: value,
+    }));
+  };
 
   const handleRegister = () => {
-    if (name && registerId && nccCadetId && dateOfBirth && emailId && phoneNumber) {
-      // Handle registration logic here
-      console.log('Registration successful');
-      navigation.navigate('HomeScreen');
-    } else {
-      console.log('Please fill in all fields');
-      // Provide feedback to the user
-    }
+    console.log('Registration successful', userData);
   };
 
   return (
@@ -28,43 +40,51 @@ const Register = () => {
       <TextInput
         style={styles.input}
         placeholder="Name"
-        value={name}
-        onChangeText={text => setName(text)}
+        value={userData.name}
+        onChangeText={text => handleInputChange('name', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Register ID"
-        value={registerId}
-        onChangeText={text => setRegisterId(text)}
+        placeholder="registerId"
+        value={userData.registerId}
+        onChangeText={text => handleInputChange('registerId', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="NCC Cadet ID"
-        value={nccCadetId}
-        onChangeText={text => setNccCadetId(text)}
+        placeholder="nccCadetId"
+        value={userData.nccCadetId}
+        onChangeText={text => handleInputChange('nccCadetId', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Date of Birth"
-        value={dateOfBirth}
-        onChangeText={text => setDateOfBirth(text)}
+        placeholder="dateOfBirth"
+        value={userData.dateOfBirth}
+        onChangeText={text => handleInputChange('dateOfBirth', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Email ID"
-        value={emailId}
-        onChangeText={text => setEmailId(text)}
+        placeholder="emailId"
+        value={userData.emailId}
+        onChangeText={text => handleInputChange('emailId', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Phone Number"
-        value={phoneNumber}
-        onChangeText={text => setPhoneNumber(text)}
+        placeholder="phoneNumber"
+        value={userData.phoneNumber}
+        onChangeText={text => handleInputChange('phoneNumber', text)}
       />
       <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
     </View>
+  );
+};
+
+const Registration = () => {
+  return (
+    <UserProvider>
+      <Register />
+    </UserProvider>
   );
 };
 
@@ -104,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Registration;

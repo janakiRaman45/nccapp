@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Registration from './Register';
 
 const Login = () => {
     const navigation = useNavigation();
@@ -9,11 +10,14 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
+      if (nccCadetId == 'Admin' && password == '12345' )
+      {
       navigation.navigate('HomeScreen');
+      }
     };
 
     const handleRegister = () => {
-        navigation.navigate('Register');
+        navigation.navigate('Registration');
     };
 
     const handleGuest = () => {

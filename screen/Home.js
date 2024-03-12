@@ -6,6 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import GridCalendar from "./calendar";
 import AdminNewsPage from "./Anews";
 
+
 const HomeScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
@@ -55,13 +56,13 @@ const HomeScreen = () => {
             <Text style={styles.heading}>Moto</Text>
             <Text style={styles.par}>Unity and Discipline</Text>
             <Text style={styles.para}>The cadet corps Committee was Started by HN Krunshuv. The NCC was Started in 1948 and November 4th Sunday was Celebrated as NCC Day</Text>
-            {/* Backdrop Overlay */}
+            
             {isDrawerOpen && (
                 <TouchableWithoutFeedback onPress={handleBackdropPress}>
                     <View style={styles.backdrop} />
                 </TouchableWithoutFeedback>
             )}
-            {/* Drawer Content */}
+            
             <Animated.View style={[styles.drawer, { transform: [{ translateX: drawerTranslateX }] }]}>
                 <TouchableOpacity
                     style={styles.drawerOption}
@@ -91,6 +92,13 @@ const HomeScreen = () => {
                 >
                     <Text>News</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('GalleryPage')}
+                    disabled={route.name === 'GalleryPage'} // Disable option if already on the GridCalendar screen
+                >
+                    <Text>Gallery</Text>
+                    </TouchableOpacity>
             </Animated.View>
         </SafeAreaView>
     );
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
     },
     menuButton: {
         position: 'absolute',
-        top: hp('2%'),
+        top: hp('8%'),
         left: wp('2%'),
         padding: 10,
     },
@@ -140,7 +148,7 @@ const styles = StyleSheet.create({
     },
     drawer: {
         position: 'absolute',
-        top: hp('8%'), // Adjust the top position to create space for the menu button
+        top: hp('13%'), // Adjust the top position to create space for the menu button
         left: 0,
         bottom: 0,
         backgroundColor: '#FFF',
