@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
+    "@react-native-community/datetimepicker": "^7.6.2",
     "@react-native-firebase/app": "^19.0.1",
     "@react-native-firebase/storage": "^19.0.1",
     "@react-navigation/drawer": "^6.6.11",
@@ -24,7 +25,8 @@
     "react-native-gesture-handler": "~2.14.0",
     "react-native-pdf": "^6.7.4",
     "react-native-responsive-screen": "^1.4.2",
-    "react-native-sqlite-storage": "^6.0.1"
+    "react-native-sqlite-storage": "^6.0.1",
+    "expo-file-system": "~16.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

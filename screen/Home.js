@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Animated } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import GridCalendar from "./calendar";
-import AdminNewsPage from "./Anews";
+
 
 
 const HomeScreen = () => {
@@ -48,7 +47,7 @@ const HomeScreen = () => {
     });
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <TouchableOpacity style={styles.menuButton} onPress={handleMenuPress}>
                 <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
@@ -92,15 +91,8 @@ const HomeScreen = () => {
                 >
                     <Text>News</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.drawerOption}
-                    onPress={() => handleMenuOptionPress('GalleryPage')}
-                    disabled={route.name === 'GalleryPage'} // Disable option if already on the GridCalendar screen
-                >
-                    <Text>Gallery</Text>
-                    </TouchableOpacity>
             </Animated.View>
-        </SafeAreaView>
+        </View>
     );
 };
 
