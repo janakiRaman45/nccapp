@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as DocumentPicker from 'expo-document-picker';
 
 const UserContext = createContext();
 
@@ -12,6 +13,8 @@ const UserProvider = ({ children }) => {
     dateOfBirth: '',
     emailId: '',
     phoneNumber: '',
+    selectedFile: null,
+    certificate: 'No',
   });
 
   return (
@@ -24,11 +27,12 @@ const UserProvider = ({ children }) => {
 const Register = () => {
   const { userData, setUserData } = useContext(UserContext);
   const [nameError, setNameError] = useState('');
-  const [registeridError, setRegisterIdError] = useState('');
+  const [registerIdError, setRegisterIdError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [nccCadetIdError, setNccCadetIdError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [fileEnabled, setFileEnabled] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -86,6 +90,32 @@ const Register = () => {
     }));
   };
 
+  const handleRadioChange = (value) => {
+    setUserData(prevData => ({
+      ...prevData,
+      certificate: value,
+    }));
+    if (value === 'Yes') {
+      setFileEnabled(true);
+    } else {
+      setFileEnabled(false);
+    }
+  };
+
+  const handleFilePick = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({ type: '*/*' });
+      if (res.type === 'success') {
+        setUserData(prevData => ({
+          ...prevData,
+          selectedFile: res,
+        }));
+      }
+    } catch (err) {
+      console.log('File picker error:', err);
+    }
+  };
+
   const handleRegister = () => {
     if (!userData.name || !userData.emailId || !userData.phoneNumber) {
       alert('Please fill in all required fields');
@@ -106,12 +136,12 @@ const Register = () => {
       />
       {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
       <TextInput
-        style={[styles.input, registeridError && styles.inputError]}
+        style={[styles.input, registerIdError && styles.inputError]}
         placeholder="registerId (Ex:A11UCA001)"
         value={userData.registerId}
         onChangeText={text => handleInputChange('registerId', text)}
       />
-      {registeridError ? <Text style={styles.errorText}>{registeridError}</Text> : null}
+      {registerIdError ? <Text style={styles.errorText}>{registerIdError}</Text> : null}
       <TextInput
         style={[styles.input, nccCadetIdError && styles.inputError]}
         placeholder="nccCadetId (EX:TN21SDA705278)"
@@ -147,6 +177,22 @@ const Register = () => {
         onChangeText={text => handleInputChange('phoneNumber', text)}
       />
       {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+      <View style={styles.radioContainer}>
+        <Text style={styles.radioText}>A certificate Holder?</Text>
+        <View style={styles.radioButtonContainer}>
+          <TouchableOpacity onPress={() => handleRadioChange('Yes')}>
+            <Text style={userData.certificate === 'Yes' ? styles.radioButtonSelected : styles.radioButton}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleRadioChange('No')}>
+            <Text style={userData.certificate === 'No' ? styles.radioButtonSelected : styles.radioButton}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {fileEnabled && (
+        <TouchableOpacity style={styles.input} onPress={handleFilePick}>
+          <Text>{userData.selectedFile ? userData.selectedFile.name : 'Upload File'}</Text>
+        </TouchableOpacity>
+      )}
       <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
@@ -203,6 +249,33 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    width: '80%',
+  },
+  radioText: {
+    flex: 1,
+    textAlign: 'left',
+  },
+  radioButtonContainer: {
+    flexDirection: 'row',
+  },
+  radioButton: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  radioButtonSelected: {
+    borderWidth: 1,
+    borderColor: 'blue',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
   },
 });
 
