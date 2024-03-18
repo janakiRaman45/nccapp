@@ -10,6 +10,9 @@ import ArmyRankGallery from './screen/ranks';
 import UserCalendar from './screen/aCallender';
 import AdminNewsPage from './screen/Anews';
 import ArmyRanks from './screen/ArmyRank';
+import PDFPage from './screen/pdf';
+
+
 
 const Stack = createStackNavigator();
 
@@ -25,6 +28,8 @@ const App = () => {
         <Stack.Screen name="UserCalendar" component={UserCalendar} />
         <Stack.Screen name="AdminNewsPage" component={AdminNewsPage} />
         <Stack.Screen name="ArmyRanks" component={ArmyRanks} />
+        <Stack.Screen name="PDFPage" component={PDFPage} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

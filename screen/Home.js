@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Animated, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
-
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -51,6 +49,7 @@ const HomeScreen = () => {
             <TouchableOpacity style={styles.menuButton} onPress={handleMenuPress}>
                 <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
+            <Image source={require('../assets/image-90.png')} style={styles.topImage} />
             <Text style={styles.title}>About NCC</Text>
             <Text style={styles.heading}>Moto</Text>
             <Text style={styles.par}>Unity and Discipline</Text>
@@ -66,28 +65,28 @@ const HomeScreen = () => {
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('HomeScreen')}
-                    disabled={route.name === 'HomeScreen'} // Disable option if already on the Home screen
+                    disabled={route.name === 'HomeScreen'} 
                 >
                     <Text>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('GridCalendar')}
-                    disabled={route.name === 'GridCalendar'} // Disable option if already on the GridCalendar screen
+                    disabled={route.name === 'GridCalendar'} 
                 >
                     <Text>Calendar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('ArmyRankGallery')}
-                    disabled={route.name === 'ArmyRankGallery'} // Disable option if already on the GridCalendar screen
+                    disabled={route.name === 'ArmyRankGallery'} 
                 >
                     <Text>Army Rank</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('AdminNewsPage')}
-                    disabled={route.name ==='AdminNewsPage'} // Disable option if already on the GridCalendar screen
+                    disabled={route.name ==='AdminNewsPage'} 
                 >
                     <Text>News</Text>
                 </TouchableOpacity>
@@ -101,17 +100,27 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5F5DC',
+        backgroundColor: '#F5F5DC', // Change the background color if needed
     },
     menuButton: {
         position: 'absolute',
-        top: hp('8%'),
+        top: hp('7%'),
         left: wp('2%'),
         padding: 10,
+        zIndex: 1, // Ensure that the menu button is above other elements
+    },
+    topImage: {
+        width: wp('100%'),
+        height: hp('30%'),
+        resizeMode: 'cover',
+        position: 'absolute',
+        top: 90,
+        left: 0,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: hp('30%'), // Adjust margin top to leave space for the image
         marginBottom: 10,
     },
     par: {
@@ -120,7 +129,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     para: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: '600',
         paddingHorizontal: 20,
         marginBottom: 20,
