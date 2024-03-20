@@ -1,159 +1,100 @@
-import React, { createContext, useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import * as DocumentPicker from 'expo-document-picker';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import app from './firebase';
+import * as DocumentPicker from 'expo-document-picker'; // Import DocumentPicker for file selection
+import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker for date selection
 
-const UserContext = createContext();
+const RegisterScreen = () => {
+  const [name, setName] = useState('');
+  const [registerId, setRegisterId] = useState('');
+  const [nccCadetId, setNccCadetId] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState(''); // State for password
+  const [certificate, setCertificate] = useState('No'); // Default value for certificate
+  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  const [showDatePicker, setShowDatePicker] = useState(false); // State for showing date picker
+  const [showFilePicker, setShowFilePicker] = useState(false); // State for showing file picker
+  const navigation = useNavigation();
 
-const UserProvider = ({ children }) => {
-  const [userData, setUserData] = useState({
-    name: '',
-    registerId: '',
-    nccCadetId: '',
-    dateOfBirth: '',
-    emailId: '',
-    phoneNumber: '',
-    selectedFile: null,
-    certificate: 'No',
-  });
+  // Function to handle showing date picker
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
 
-  return (
-    <UserContext.Provider value={{ userData, setUserData }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
-
-const Register = () => {
-  const { userData, setUserData } = useContext(UserContext);
-  const [nameError, setNameError] = useState('');
-  const [registerIdError, setRegisterIdError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [nccCadetIdError, setNccCadetIdError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [fileEnabled, setFileEnabled] = useState(false);
-
+  // Function to handle selecting date in date picker
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
       const formattedDate = selectedDate.toLocaleDateString('en-US');
-      setUserData(prevData => ({
-        ...prevData,
-        dateOfBirth: formattedDate,
-      }));
+      setDateOfBirth(formattedDate);
     }
   };
 
-  const handleInputChange = (key, value) => {
-    let nameErr = '';
-    let registerIdErr = '';
-    let emailErr = '';
-    let nccCadetIdErr = '';
-    let phoneErr = '';
-
-    if (key === 'name' && /\d/.test(value)) {
-      nameErr = 'Name cannot contain numbers';
-    }
-
-    if (key === 'registerId') {
-      if (!/^[A-Z]\d{2}[A-Z]{3}\d{3}$/.test(value)) {
-        registerIdErr = 'Invalid RegisterId Format';
-      }
-    }
-
-    if (key === 'emailId' && !value.includes('@')) {
-      emailErr = 'Email must contain "@" symbol';
-    }
-
-    if (key === 'nccCadetId') {
-      if (!/^[A-Z]{2}\d{2}[A-Z]{3}\d{6}$/.test(value)) {
-        nccCadetIdErr = 'Invalid nccCadetId format';
-      }
-    }
-
-    if (key === 'phoneNumber') {
-      if (!/^\d{10}$/.test(value)) {
-        phoneErr = 'Phone number must be exactly 10 digits';
-      }
-    }
-
-    setNameError(nameErr);
-    setRegisterIdError(registerIdErr);
-    setEmailError(emailErr);
-    setNccCadetIdError(nccCadetIdErr);
-    setPhoneError(phoneErr);
-
-    setUserData(prevData => ({
-      ...prevData,
-      [key]: value,
-    }));
-  };
-
+  // Function to handle showing file picker
   const handleRadioChange = (value) => {
-    setUserData(prevData => ({
-      ...prevData,
-      certificate: value,
-    }));
+    setCertificate(value);
     if (value === 'Yes') {
-      setFileEnabled(true);
+      setShowFilePicker(true);
     } else {
-      setFileEnabled(false);
+      setShowFilePicker(false);
     }
   };
 
+  // Function to handle file pick
   const handleFilePick = async () => {
     try {
       const res = await DocumentPicker.getDocumentAsync({ type: '*/*' });
       if (res.type === 'success') {
-        setUserData(prevData => ({
-          ...prevData,
-          selectedFile: res,
-        }));
+        setSelectedFile(res);
       }
     } catch (err) {
       console.log('File picker error:', err);
     }
   };
 
-  const handleRegister = () => {
-    if (!userData.name || !userData.emailId || !userData.phoneNumber) {
-      alert('Please fill in all required fields');
-      return;
+  // Function to handle user registration
+  const handleRegister = async () => {
+    try {
+      const auth = getAuth(app);
+      await createUserWithEmailAndPassword(auth, email, password); // Using password for user registration
+      Alert.alert('Success', 'User registered successfully.');
+      navigation.navigate('Login'); // Navigate to login screen after successful registration
+    } catch (error) {
+      Alert.alert('Error', 'Failed to register user. Please try again.');
+      console.error('Registration error:', error);
     }
-
-    console.log('Registration successful', userData);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registration</Text>
+      <Text style={styles.title}>Register</Text>
       <TextInput
-        style={[styles.input, nameError && styles.inputError]}
+        style={styles.input}
         placeholder="Name"
-        value={userData.name}
-        onChangeText={text => handleInputChange('name', text)}
+        onChangeText={(text) => setName(text)}
+        value={name}
       />
-      {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
       <TextInput
-        style={[styles.input, registerIdError && styles.inputError]}
-        placeholder="registerId (Ex:A11UCA001)"
-        value={userData.registerId}
-        onChangeText={text => handleInputChange('registerId', text)}
+        style={styles.input}
+        placeholder="Register ID"
+        onChangeText={(text) => setRegisterId(text)}
+        value={registerId}
       />
-      {registerIdError ? <Text style={styles.errorText}>{registerIdError}</Text> : null}
       <TextInput
-        style={[styles.input, nccCadetIdError && styles.inputError]}
-        placeholder="nccCadetId (EX:TN21SDA705278)"
-        value={userData.nccCadetId}
-        onChangeText={text => handleInputChange('nccCadetId', text)}
+        style={styles.input}
+        placeholder="NCC Cadet ID"
+        onChangeText={(text) => setNccCadetId(text)}
+        value={nccCadetId}
       />
-      {nccCadetIdError ? <Text style={styles.errorText}>{nccCadetIdError}</Text> : null}
       <TouchableOpacity
         style={styles.input}
-        onPress={() => setShowDatePicker(true)}
+        onPress={showDatepicker}
       >
-        <Text>{userData.dateOfBirth || 'Date of Birth'}</Text>
+        <Text>{dateOfBirth || 'Date of Birth'}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
@@ -164,47 +105,46 @@ const Register = () => {
         />
       )}
       <TextInput
-        style={[styles.input, emailError && styles.inputError]}
-        placeholder="emailId"
-        value={userData.emailId}
-        onChangeText={text => handleInputChange('emailId', text)}
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={(text) => setEmail(text)}
+        value={email}
       />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       <TextInput
-        style={[styles.input, phoneError && styles.inputError]}
-        placeholder="phoneNumber"
-        value={userData.phoneNumber}
-        onChangeText={text => handleInputChange('phoneNumber', text)}
+        style={styles.input}
+        placeholder="Phone Number"
+        onChangeText={(text) => setPhone(text)}
+        value={phone}
       />
-      {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        onChangeText={(text) => setPassword(text)} // Handling password input
+        value={password}
+        secureTextEntry={true}
+      />
       <View style={styles.radioContainer}>
         <Text style={styles.radioText}>A certificate Holder?</Text>
         <View style={styles.radioButtonContainer}>
           <TouchableOpacity onPress={() => handleRadioChange('Yes')}>
-            <Text style={userData.certificate === 'Yes' ? styles.radioButtonSelected : styles.radioButton}>Yes</Text>
+            <View style={[styles.radioButton, certificate === 'Yes' && styles.radioButtonSelected]}></View>
+            <Text style={styles.radioButtonText}>Yes</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleRadioChange('No')}>
-            <Text style={userData.certificate === 'No' ? styles.radioButtonSelected : styles.radioButton}>No</Text>
+            <View style={[styles.radioButton, certificate === 'No' && styles.radioButtonSelected]}></View>
+            <Text style={styles.radioButtonText}>No</Text>
           </TouchableOpacity>
         </View>
       </View>
-      {fileEnabled && (
+      {showFilePicker && (
         <TouchableOpacity style={styles.input} onPress={handleFilePick}>
-          <Text>{userData.selectedFile ? userData.selectedFile.name : 'Upload File'}</Text>
+          <Text>{selectedFile ? selectedFile.name : 'Upload File'}</Text>
         </TouchableOpacity>
       )}
-      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
     </View>
-  );
-};
-
-const Registration = () => {
-  return (
-    <UserProvider>
-      <Register />
-    </UserProvider>
   );
 };
 
@@ -216,67 +156,58 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5DC',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
   },
   input: {
-    width: '80%',
-    height: 40,
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    justifyContent: 'center',
-  },
-  inputError: {
-    borderColor: 'red',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-  },
-  registerButton: {
-    width: '80%',
-    backgroundColor: '#4682B4',
     padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginVertical: 5,
+    width: '80%',
   },
   radioContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    width: '80%',
+    marginVertical: 10,
   },
   radioText: {
-    flex: 1,
-    textAlign: 'left',
+    marginRight: 10,
   },
   radioButtonContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end', // Align items to the right
   },
   radioButton: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'black',
+    marginRight: 5,
   },
   radioButtonSelected: {
-    borderWidth: 1,
-    borderColor: 'blue',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    backgroundColor: 'blue',
+  },
+  radioButtonText: {
+    fontSize: 16,
+    textAlign: 'right',
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
     borderRadius: 5,
+    marginTop: 20,
+    width: '80%', // Adjust button width
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
-export default Registration;
+export default RegisterScreen;

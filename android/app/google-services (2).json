@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "117695831929",
+    "firebase_url": "https://nccmanagement-2f33e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "nccmanagement-2f33e",
+    "storage_bucket": "nccmanagement-2f33e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117695831929:android:ff34aef6656f4fdacbd9a8",
+        "android_client_info": {
+          "package_name": "com.ncc.nccproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhijnJ0v7czO4lp3k6xXgxIrul363tsmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

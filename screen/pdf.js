@@ -1,59 +1,55 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { PDFView } from 'react-native-pdf-lib';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { getStorage, ref, listAll, getDownloadURL } from '@react-native-firebase/storage';
+
+const Book = ({ title, url, onPress }) => (
+  <TouchableOpacity key={title} onPress={onPress} style={styles.book}>
+    <Text style={styles.bookTitle}>{title}</Text>
+    <Image source={require('../assets/ncclogo.jpg')} style={styles.bookImage} />
+  </TouchableOpacity>
+);
 
 const PDFPage = () => {
   const [pdfPaths, setPdfPaths] = useState([]);
 
-  const downloadPDF = (url) => {
-    fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const data = reader.result;
-          console.log('PDF Base64:', data);
-          setPdfPaths((prevPaths) => [...prevPaths, data]);
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch((error) => {
-        console.error('Error downloading PDF:', error);
-      });
-  };
+  useEffect(() => {
+    const fetchPDFs = async () => {
+      const storage = getStorage();
+      const listRef = ref(storage, 'pdfs/'); // Assuming your PDFs are stored in a 'pdfs' folder
 
-  // Sample array of PDF URLs
-  const pdfUrls = [
-    'https://cdnbbsr.s3waas.gov.in/s307811dc6c422334ce36a09ff5cd6fe71/uploads/2020/01/2020011529.pdf',
-    'https://example.com/pdf2.pdf',
-    'https://example.com/pdf3.pdf',
-  ];
+      try {
+        const res = await listAll(listRef);
+        const paths = await Promise.all(res.items.map(async (item) => {
+          const url = await getDownloadURL(item);
+          return { title: item.name, url };
+        }));
+        setPdfPaths(paths);
+      } catch (error) {
+        console.error('Error fetching PDFs:', error);
+      }
+    };
+
+    fetchPDFs();
+  }, []);
+
+  const handleBookPress = (url) => {
+    // Logic for downloading PDF
+    // You can use the URL to open the PDF in a PDF viewer or download it
+    console.log('PDF URL:', url);
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.pdfList}>
-        {pdfUrls.map((url, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => downloadPDF(url)}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Download PDF {index + 1}</Text>
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.bookList}>
+        {pdfPaths.map((pdf) => (
+          <Book
+            key={pdf.title}
+            title={pdf.title}
+            url={pdf.url}
+            onPress={() => handleBookPress(pdf.url)}
+          />
         ))}
       </ScrollView>
-      <View style={styles.pdfContainer}>
-        {pdfPaths.map((path, index) => (
-          <View key={index} style={styles.pdfView}>
-            <PDFView
-              fadeInDuration={250.0}
-              style={styles.pdfView}
-              resource={path}
-              resourceType="base64"
-            />
-          </View>
-        ))}
-      </View>
     </View>
   );
 };
@@ -64,35 +60,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  pdfList: {
+  bookList: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
   },
-  button: {
-    backgroundColor: 'blue',
+  book: {
+    backgroundColor: '#eee',
     padding: 10,
+    margin: 10,
     borderRadius: 5,
-    marginBottom: 10,
   },
-  buttonText: {
-    color: 'white',
+  bookTitle: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  pdfContainer: {
-    flex: 1,
-    width: '100%',
-    marginTop: 20,
-    paddingHorizontal: 10,
-  },
-  pdfView: {
-    marginBottom: 20,
-    width: '100%',
-    height: 300, // Adjust the height as needed
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    overflow: 'hidden',
+  bookImage: {
+    width: 100,
+    height: 150,
+    resizeMode: 'contain',
   },
 });
 

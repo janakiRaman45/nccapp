@@ -46,14 +46,27 @@ const ArmyRanks = () => {
   };
 
   const ranks = [
-    { name: 'General', details: 'General is the highest rank in the army.', image: require('../assets/ncclogo.jpg') },
-    { name: 'Colonel', details: 'Captain of Indian Army."The Indian Army, with its timeless motto Service Before Self, embodies the spirit of sacrifice, valor, and dedication. This motto encapsulates the unwavering commitment of the Indian soldier to serve the nation with utmost devotion and integrity. It reflects the ethos of putting the welfare of the country and its people above personal interests, symbolizing the noble virtues upheld by the brave men and women in uniform. With courage as their armor and patriotism as their creed, the Indian Army stands as a beacon of strength, safeguarding the sovereignty and integrity of the nation, while also extending a helping hand in times of need, both at home and abroad. In every challenge they face and every mission they undertake, the soldiers of the Indian Army remain steadfast in their resolve, exemplifying the epitome of selfless service and unwavering dedication to the nation.', image: require('../assets/Captain_of_the_Indian_Army.png') },
-    { name: 'Major', details: 'Second Lieutenant of Indian Army.', image: require('../assets/Second_Lieutenant_of_the_Indian_Army.png') },
-    { name: 'Captain', details: 'Captain is a mid-level officer rank.', image: require('../assets/Subedar_-_Risaldar_of_the_Indian_Army.png') },
-    { name: 'Lieutenant', details: 'Lieutenant is a junior officer rank.', image: require('../assets/ncclogo.jpg') },
-    { name: 'Sergeant', details: 'Sergeant is a noncommissioned officer rank.', image: require('../assets/ncclogo.jpg') },
-    { name: 'Corporal', details: 'Corporal is a noncommissioned officer rank.', image: require('../assets/ncclogo.jpg') },
-    { name: 'Private', details: 'Private is the lowest rank in the army.', image: require('../assets/ncclogo.jpg') },
+    { name: 'Field Marshal', details: 'Awarded exclusively in recognition of exceptional service and leadership during wartime,Ceremonial not included in Army organizational hierarchy.', image: require('../assets/Field Marshal.png') },
+    { name: 'General', details: 'Highest ranking flag rank/active-duty officer in Army organizational hierarchy.', image: require('../assets/General.png') },
+    { name: 'Lieutenant General', details: 'Second-highest flag rank in Army organizational hierarchy..', image: require('../assets/Lieutenant General.png') },
+    { name: 'Major General', details: 'Third-highest flag rank in Army organizational hierarchy..', image: require('../assets/Major General.png') },
+    { name: 'Brigadier', details: 'Fourth-highest flag rank in Army organizational hierarchy.', image: require('../assets/Brigadier.png') },
+    { name: 'Colonel', details: 'It is equivalent to captain in the Indian Navy and group captain in the Indian Air Force.', image: require('../assets/Colonel.png') },
+    { name: 'Lieutenant Colonel', details: 'Lieutenant colonel is a rank of commissioned officers in the armies, most marine forces and some air forces of the world, above a major and below a colonel.', image: require('../assets/Lieutenant Colonel.png') },
+    { name: 'Major', details: 'When used unhyphenated and in conjunction with no other indicators, major is one rank above captain in armies and air forces, and one rank below lieutenant colonel.', image: require('../assets/Major.png') },
+    { name: 'Captain', details: 'Captain is a mid-level officer rank.', image: require('../assets/Captain.png') },
+    { name: 'Lieutenant', details: 'Lieutenant is a junior officer rank.', image: require('../assets/Lieutenant.png') },
+    { name: 'Second Lieutenant', details: 'They lead platoon-size units consisting of a platoon sergeant and two or more squads (16 to 44 Soldiers).', image: require('../assets/Second Lieutenant.png') },
+    { name: 'Subedar Major', details: 'They possess a high amount of experience and are referred to as SM Sahab. An SM can lead a single unit or a headquarters that has troops under its command.', image: require('../assets/Subedar Major.png') },
+    { name: 'Subedar', details: 'Subedar is a military rank in the militaries of South Asia roughly equivalent to that of a warrant officer. Historically classes in the British Indian Army as a Viceroys commissioned officer.', image: require('../assets/Subedar.png') },
+    { name: 'Naib Subedar', details: 'This is the lowest rank for Junior Commissioned Officers in the Indian army rank structure. Candidates are promoted to this rank by selection.', image: require('../assets/Naib_Subedar.png') },
+   // { name: 'Regimental Havildar Major', details: 'The insignia was an Ashoka lion emblem. The regimental quartermaster havildar the most senior non-commissioned officer in a company, equivalent to a company sergeant major.', image: require('../assets/Regimental Havildar Major.png') },
+   // { name: 'Regimental Quartermaster Havildar', details: 'The regimental quartermaster havildar (RQMH) was equivalent to a regimental quartermaster sergeant. The regimental havildar major (RHM) was equivalent to a regimental sergeant major.', image: require('../assets/Regimental Quartermaster Havildar.png') },
+   // { name: 'Company Havildar Master', details: 'The company havildar master assisted the quartermaster in managing the company stores. The insignia was three chevrons with an Ashoka lion emblem above.', image: require('../assets/CHM.png') },
+    //{ name: 'Company Quater Havildar Master', details: 'The company quartermaster havildar (CQMH), equivalent to a company quartermaster sergeant, assisted the quartermaster in managing the company stores.', image: require('../assets/CQHM.jng') },
+    { name: 'Havildar', details: 'Havildar is a rank in the Indian, Pakistani and Nepalese armies, equivalent to sergeant. It is not used in cavalry units, where the equivalent is daffadar.', image: require('../assets/Havildar.png') },
+    { name: 'Naik', details: 'Naik is an Indian Army, Pakistan Army and Bangladesh Police rank equivalent to corporal. The rank was previously used in the Indian Army during the Raj and the Camel Corps, ranking between lance naik and havildar.', image: require('../assets/Naik.png') },
+    { name: 'Lance Naik', details: 'A Lance Naik is a crucial rank in the Indian Army, typically held by a non-commissioned officer (NCO). They serve as a bridge between the lower enlisted soldiers.', image: require('../assets/Lance Naik.png') },
   ];
 
   const renderRankItem = ({ item }) => (

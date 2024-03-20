@@ -9,6 +9,7 @@ const HomeScreen = () => {
     const route = useRoute();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const drawerAnimation = new Animated.Value(0);
+    const [userName, setUserName] = useState("Admin"); // Placeholder for user name
 
     useEffect(() => {
         if (isDrawerOpen) {
@@ -35,6 +36,11 @@ const HomeScreen = () => {
         navigation.navigate(screen);
     };
 
+    const handleLogout = () => {
+        // Navigate to the Login screen
+        navigation.navigate('Login');
+    };
+
     const handleBackdropPress = () => {
         setIsDrawerOpen(false);
     };
@@ -48,6 +54,7 @@ const HomeScreen = () => {
         <View style={styles.container}>
             <TouchableOpacity style={styles.menuButton} onPress={handleMenuPress}>
                 <Ionicons name="menu" size={24} color="black" />
+                <Text style={styles.userName}>{userName}</Text>
             </TouchableOpacity>
             <Image source={require('../assets/image-90.png')} style={styles.topImage} />
             <Text style={styles.title}>About NCC</Text>
@@ -90,6 +97,12 @@ const HomeScreen = () => {
                 >
                     <Text>News</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.drawerOption, { marginTop: 'auto' }]} // Push the logout button to the bottom
+                    onPress={handleLogout}
+                >
+                    <Text>Logout</Text>
+                </TouchableOpacity>
             </Animated.View>
         </View>
     );
@@ -103,11 +116,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5F5DC', // Change the background color if needed
     },
     menuButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
         position: 'absolute',
         top: hp('7%'),
         left: wp('2%'),
         padding: 10,
         zIndex: 1, // Ensure that the menu button is above other elements
+    },
+    userName: {
+        marginLeft: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     topImage: {
         width: wp('100%'),

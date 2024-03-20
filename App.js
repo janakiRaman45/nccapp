@@ -12,12 +12,11 @@ import AdminNewsPage from './screen/Anews';
 import ArmyRanks from './screen/ArmyRank';
 import PDFPage from './screen/pdf';
 
-
-
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
+    
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
@@ -29,7 +28,6 @@ const App = () => {
         <Stack.Screen name="AdminNewsPage" component={AdminNewsPage} />
         <Stack.Screen name="ArmyRanks" component={ArmyRanks} />
         <Stack.Screen name="PDFPage" component={PDFPage} />
-        
       </Stack.Navigator>
     </NavigationContainer>
   );
