@@ -7,10 +7,14 @@ import Registration from './screen/Register';
 import GridCalendar from './screen/calendar';
 import HomeScreen from './screen/Home';
 import ArmyRankGallery from './screen/ranks';
-import UserCalendar from './screen/aCallender';
+//import UserCalendar from './screen/aCallender';
 import AdminNewsPage from './screen/Anews';
 import ArmyRanks from './screen/ArmyRank';
 import PDFPage from './screen/pdf';
+import NavyRank from './screen/NavyRank';
+import Enrollment from './screen/Enroll';
+import Airforce from './screen/Airforce';
+import PdfList from './screen/pdf';
 
 const Stack = createStackNavigator();
 
@@ -21,13 +25,15 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
         <Stack.Screen name="Registration" component={Registration} options={{headerShown: false}} />
-        <Stack.Screen name="GridCalendar" component={GridCalendar} />
+        <Stack.Screen name="GridCalendar" component={GridCalendar} options={{headerShown: false}}/>
         <Stack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="ArmyRankGallery" component={ArmyRankGallery} />
-        <Stack.Screen name="UserCalendar" component={UserCalendar} />
-        <Stack.Screen name="AdminNewsPage" component={AdminNewsPage} />
-        <Stack.Screen name="ArmyRanks" component={ArmyRanks} />
-        <Stack.Screen name="PDFPage" component={PDFPage} />
+        <Stack.Screen name="ArmyRankGallery" component={ArmyRankGallery} options={{headerShown: false}}/>
+        <Stack.Screen name="AdminNewsPage" component={AdminNewsPage} options={{headerShown: false}}/>
+        <Stack.Screen name="ArmyRanks" component={ArmyRanks} options={{headerShown: false}}/>
+        <Stack.Screen name="NavyRank" component={NavyRank} options={{headerShown: false}}/>
+        <Stack.Screen name="Enrollment" component={Enrollment} options={{headerShown: false}} />
+        <Stack.Screen name="Airforce" component={Airforce} options={{headerShown: false}}/>
+        <Stack.Screen name="PdfList" component={PdfList} />
       </Stack.Navigator>
     </NavigationContainer>
   );

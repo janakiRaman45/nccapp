@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserCalendar from './aCallender';
+import PdfList from './pdf';
 
 
 const Login = () => {
@@ -23,7 +24,7 @@ const Login = () => {
 
     const handleGuest = () => {
         console.log('Logging in as a guest...');
-        navigation.navigate('PDFPage');
+        navigation.navigate('PdfList');
     }; 
 
     return (

@@ -4,12 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+
 const HomeScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const drawerAnimation = new Animated.Value(0);
-    const [userName, setUserName] = useState("Admin"); // Placeholder for user name
+    const [userName, setUserName] = useState("Admin");
 
     useEffect(() => {
         if (isDrawerOpen) {
@@ -47,7 +48,7 @@ const HomeScreen = () => {
 
     const drawerTranslateX = drawerAnimation.interpolate({
         inputRange: [0, 1],
-        outputRange: [-wp('50%'), 0],
+        outputRange: [-wp('60%'), 0],
     });
 
     return (
@@ -74,34 +75,41 @@ const HomeScreen = () => {
                     onPress={() => handleMenuOptionPress('HomeScreen')}
                     disabled={route.name === 'HomeScreen'} 
                 >
-                    <Text>Home</Text>
+                    <Text style={styles.txt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('GridCalendar')}
                     disabled={route.name === 'GridCalendar'} 
                 >
-                    <Text>Calendar</Text>
+                    <Text style={styles.txt}>Calendar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('ArmyRankGallery')}
                     disabled={route.name === 'ArmyRankGallery'} 
                 >
-                    <Text>Army Rank</Text>
+                    <Text style={styles.txt}>Army Rank</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
                     onPress={() => handleMenuOptionPress('AdminNewsPage')}
                     disabled={route.name ==='AdminNewsPage'} 
                 >
-                    <Text>News</Text>
+                    <Text style={styles.txt}>News</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('Enrollment')}
+                    disabled={route.name ==='Enrollment'} 
+                >
+                    <Text style={styles.txt}>Enrollment</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.drawerOption, { marginTop: 'auto' }]} // Push the logout button to the bottom
                     onPress={handleLogout}
                 >
-                    <Text>Logout</Text>
+                    <Text style={styles.txt}>Logout</Text>
                 </TouchableOpacity>
             </Animated.View>
         </View>
@@ -169,23 +177,27 @@ const styles = StyleSheet.create({
     },
     drawer: {
         position: 'absolute',
-        top: hp('13%'), // Adjust the top position to create space for the menu button
+        top: hp('0%'), 
         left: 0,
         bottom: 0,
         backgroundColor: '#FFF',
-        width: wp('50%'), // Adjust the width as needed
-        elevation: 4, // Android elevation
+        width: wp('60%'), 
+        elevation: 4, 
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        justifyContent: 'flex-start', // Align items to the top
-        alignItems: 'flex-start',
-        paddingTop: hp('2%'), // Adjust top padding to align with the menu button
+        justifyContent: 'flex-start', 
+        alignItems: 'stretch',
+        paddingTop: hp('15%'),  
     },
     drawerOption: {
         padding: 10,
+        fontSize: 20,
     },
+    txt: {
+        fontSize: 16,
+    }
 });
 
 export default HomeScreen;

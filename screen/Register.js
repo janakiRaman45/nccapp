@@ -60,11 +60,27 @@ const RegisterScreen = () => {
   const handleRegister = async () => {
     try {
       const auth = getAuth(app);
-      await createUserWithEmailAndPassword(auth, email, password); // Using password for user registration
-      Alert.alert('Success', 'User registered successfully.');
-      navigation.navigate('Login'); // Navigate to login screen after successful registration
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      const database = getDatabase(app);
+      const userRef = ref(database, `users/${user.uid}`);
+      await set(userRef, {
+        name,
+        registerId,
+        nccCadetId,
+        dateOfBirth,
+        email,
+        phone,
+        certificate,
+        certificateFile: selectedFile ? selectedFile.uri : null,
+        createdAt: new Date().toISOString(),
+      });
+  
+      Alert.alert('Success', 'User registered and information saved successfully.');
+      navigation.navigate('Login');
     } catch (error) {
-      Alert.alert('Error', 'Failed to register user. Please try again.');
+      Alert.alert('Error', 'Failed to register user and save information. Please try again.');
       console.error('Registration error:', error);
     }
   };

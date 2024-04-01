@@ -5,7 +5,6 @@ import { initializeApp } from 'firebase/app';
 // import {...} from "firebase/database";
 // import {...} from "firebase/firestore";
 // import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
 
 // Initialize Firebase
 const firebaseConfig = {

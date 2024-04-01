@@ -1,0 +1,20 @@
+const handleLogin = async () => {
+    setErrorMessage(''); // Clear any previous error message
+
+    if (!nccCadetId || !dateOfBirth) {
+      setErrorMessage('Please enter NCC Cadet ID and Date of Birth.');
+      return;
+    }
+
+    const formattedDateOfBirth = formatDateOfBirth(dateOfBirth); // Function to format date (replace with your implementation)
+
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, nccCadetId, formattedDateOfBirth);
+
+      navigation.navigate('HomeScreen');
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMessage('Login failed. Please check your credentials.');
+    }
+  };

@@ -1,85 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { getStorage, ref, listAll, getDownloadURL } from '@react-native-firebase/storage';
+import React, { memo } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import FileViewer from 'react-native-file-viewer';
 
-const Book = ({ title, url, onPress }) => (
-  <TouchableOpacity key={title} onPress={onPress} style={styles.book}>
-    <Text style={styles.bookTitle}>{title}</Text>
-    <Image source={require('../assets/ncclogo.jpg')} style={styles.bookImage} />
-  </TouchableOpacity>
-);
+const pdfFiles = [
+  { name: "PDF 1", url: require("../assets/123.pdf"), thumbnail: require("../assets/ncclogo.jpg") },
+  { name: "PDF 2", url: require("../assets/123.pdf"), thumbnail: require("../assets/ncclogo.jpg") },
+  { name: "PDF 3", url: require("../assets/123.pdf"), thumbnail: require("../assets/ncclogo.jpg") },
+  // Add more PDF files as needed with their respective thumbnails and urls
+];
 
-const PDFPage = () => {
-  const [pdfPaths, setPdfPaths] = useState([]);
-
-  useEffect(() => {
-    const fetchPDFs = async () => {
-      const storage = getStorage();
-      const listRef = ref(storage, 'pdfs/'); // Assuming your PDFs are stored in a 'pdfs' folder
-
-      try {
-        const res = await listAll(listRef);
-        const paths = await Promise.all(res.items.map(async (item) => {
-          const url = await getDownloadURL(item);
-          return { title: item.name, url };
-        }));
-        setPdfPaths(paths);
-      } catch (error) {
-        console.error('Error fetching PDFs:', error);
-      }
-    };
-
-    fetchPDFs();
-  }, []);
-
-  const handleBookPress = (url) => {
-    // Logic for downloading PDF
-    // You can use the URL to open the PDF in a PDF viewer or download it
-    console.log('PDF URL:', url);
+const PdfList = memo(() => {
+  const openPdf = async (url) => {
+    try {
+      await FileViewer.open(url, { showOpenWithDialog: true, showAppsSuggestions: true });
+    } catch (e) {
+      console.warn("An error occurred", JSON.stringify(e));
+    }
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.bookList}>
-        {pdfPaths.map((pdf) => (
-          <Book
-            key={pdf.title}
-            title={pdf.title}
-            url={pdf.url}
-            onPress={() => handleBookPress(pdf.url)}
-          />
-        ))}
-      </ScrollView>
+      {pdfFiles.map((pdf, index) => (
+        <TouchableOpacity key={index} onPress={() => openPdf(pdf.url)} style={styles.pdfItem}>
+          <Text style={styles.pdfName}>{pdf.name}</Text>
+          <Image source={pdf.thumbnail} style={styles.thumbnail} />
+        </TouchableOpacity>
+      ))}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f0f0f0',
   },
-  bookList: {
-    flexGrow: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-  },
-  book: {
-    backgroundColor: '#eee',
+  pdfItem: {
+    alignItems: 'center',
     padding: 10,
-    margin: 10,
+    marginVertical: 5,
+    backgroundColor: '#fff',
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
-  bookTitle: {
+  pdfName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
   },
-  bookImage: {
+  thumbnail: {
     width: 100,
-    height: 150,
+    height: 100,
     resizeMode: 'contain',
   },
 });
 
-export default PDFPage;
+export default PdfList;

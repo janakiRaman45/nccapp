@@ -1,18 +1,78 @@
-import React from 'react';
-import { View, ScrollView, ImageBackground, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, ImageBackground, StyleSheet, Text, TouchableOpacity,  Animated } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { TouchableWithoutFeedback } from 'react-native';
+
 
 const ArmyRankGallery = () => {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
+    const route = useRoute();
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const drawerAnimation = new Animated.Value(0);
+    const [userName, setUserName] = useState("Admin");
 
-  const handleBranchPress = (Army) => {
+    useEffect(() => {
+        if (isDrawerOpen) {
+            Animated.timing(drawerAnimation, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            Animated.timing(drawerAnimation, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        }
+    }, [isDrawerOpen]);
+
+    const handleMenuPress = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
+    const handleMenuOptionPress = (screen) => {
+        setIsDrawerOpen(false);
+        navigation.navigate(screen);
+    };
+
+    const handleLogout = () => {
+        // Navigate to the Login screen
+        navigation.navigate('Login');
+    };
+
+    const handleBackdropPress = () => {
+        setIsDrawerOpen(false);
+    };
+
+    const drawerTranslateX = drawerAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-wp('60%'), 0],
+    });
+
+  const handleArmyPress = (Army) => {
     navigation.navigate('ArmyRanks', { Army });
   };
 
+  const handleNavyPress = (Navy) => {
+    navigation.navigate('NavyRank', { Navy });
+  };
+
+  const handleAirforcePress = (Airforce) => {
+    navigation.navigate('Airforce', { Airforce });
+  };
+
   return (
+    <SafeAreaView style={styles.cont}>
+    <TouchableOpacity style={styles.menuButton} onPress={handleMenuPress}>
+      <Ionicons name="menu" size={24} color="black" />
+      <Text style={styles.userName}>{userName}</Text>
+    </TouchableOpacity>
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => handleBranchPress('Army')} style={styles.branchButton}>
+      <TouchableOpacity onPress={() => handleArmyPress('Army')} style={styles.branchButton}>
         <ImageBackground
           source={require('../assets/army.jpg')}
           style={styles.imageBackground}
@@ -23,7 +83,7 @@ const ArmyRankGallery = () => {
           </View>
         </ImageBackground>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => handleBranchPress('Navy')} style={styles.branchButton}>
+      <TouchableOpacity onPress={() => handleNavyPress('Navy')} style={styles.branchButton}>
         <ImageBackground
           source={require('../assets/navy.jpg')}
           style={styles.imageBackground}
@@ -34,7 +94,7 @@ const ArmyRankGallery = () => {
           </View>
         </ImageBackground>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => handleBranchPress('Airforce')} style={styles.branchButton}>
+      <TouchableOpacity onPress={() => handleAirforcePress('Airforce')} style={styles.branchButton}>
         <ImageBackground
           source={require('../assets/Airforce.jpg')}
           style={styles.imageBackground}
@@ -45,17 +105,93 @@ const ArmyRankGallery = () => {
           </View>
         </ImageBackground>
       </TouchableOpacity>
+
+      {isDrawerOpen && (
+                <TouchableWithoutFeedback onPress={handleBackdropPress}>
+                    <View style={styles.backdrop} />
+                </TouchableWithoutFeedback>
+            )}
+            
+            <Animated.View style={[styles.drawer, { transform: [{ translateX: drawerTranslateX }] }]}>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('HomeScreen')}
+                    disabled={route.name === 'HomeScreen'} 
+                >
+                    <Text style={styles.txt}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('GridCalendar')}
+                    disabled={route.name === 'GridCalendar'} 
+                >
+                    <Text style={styles.txt}>Calendar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('ArmyRankGallery')}
+                    disabled={route.name === 'ArmyRankGallery'} 
+                >
+                    <Text style={styles.txt}>Army Rank</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('AdminNewsPage')}
+                    disabled={route.name ==='AdminNewsPage'} 
+                >
+                    <Text style={styles.txt}>News</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.drawerOption}
+                    onPress={() => handleMenuOptionPress('Enrollment')}
+                    disabled={route.name ==='Enrollment'} 
+                >
+                    <Text style={styles.txt}>Enrollment</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.drawerOption, { marginTop: 'auto' }]} // Push the logout button to the bottom
+                    onPress={handleLogout}
+                >
+                    <Text style={styles.txt}>Logout</Text>
+                </TouchableOpacity>
+            </Animated.View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  cont: {
+    flex: 2,
+  },
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     padding: 10,
   },
+  menuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: hp('7%'),
+    left: wp('2%'),
+    padding: 10,
+    zIndex: 1, // Ensure that the menu button is above other elements
+},
+userName: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+},
+backdrop: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
   branchButton: {
     width: wp(80),
     height: hp(30),
