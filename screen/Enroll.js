@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import app from './firebase';
-import * as DocumentPicker from 'expo-document-picker'; // Import DocumentPicker for file selection
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as FileSystem from 'expo-file-system';
+import * as SQLite from 'expo-sqlite';
+import { useNavigation } from '@react-navigation/native';
 
 const Enrollment = () => {
   const [name, setName] = useState('');
@@ -25,7 +24,6 @@ const Enrollment = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showFilePicker, setShowFilePicker] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState('');
   const navigation = useNavigation();
 
@@ -41,20 +39,94 @@ const Enrollment = () => {
     }
   };
 
-  const handleFilePick = async () => {
+  const handleFilePick = async (key) => {
     try {
       const res = await DocumentPicker.getDocumentAsync({ type: '*/*' });
       if (res.type === 'success') {
-        setSelectedFile(res);
+        const { uri, size } = res;
+        const fileData = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+        const fileName = uri.split('/').pop();
+        const fileType = res.mimeType;
+        const fileSize = size; // Get the file size in bytes
+
+        // Set the file based on the key
+        switch (key) {
+          case '14': // Aadhar Card
+            setAadharCard({ fileName, fileData, fileType, fileSize });
+            break;
+          case '15': // Bank Passbook
+            setBankPassbook({ fileName, fileData, fileType, fileSize });
+            break;
+          case '16': // 12th Marksheet
+            setTwelfthMarksheet({ fileName, fileData, fileType, fileSize });
+            break;
+          case '17': // 10th Marksheet
+            setTenthMarksheet({ fileName, fileData, fileType, fileSize });
+            break;
+          default:
+            break;
+        }
+      } else if (res.type === 'cancel') {
+        console.log('File picking canceled');
       }
     } catch (err) {
-      console.log('File picker error:', err);
+      console.error('File picker error:', err);
+      Alert.alert('Error', 'Failed to pick file. Please try again.');
     }
   };
 
-  const handleEnrollment = () => {
-    Alert.alert('Enrolled Submitted');
-  }
+  const handleEnrollment = async () => {
+    try {
+      // Prepare the form data
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('fatherName', fatherName);
+      formData.append('motherName', motherName);
+      formData.append('classValue', classValue);
+      formData.append('aadharNumber', aadharNumber);
+      formData.append('bankAccountNumber', bankAccountNumber);
+      formData.append('ifscCode', ifscCode);
+      formData.append('branchName', branchName);
+      formData.append('identificationMark', identificationMark);
+      formData.append('dateOfBirth', dateOfBirth);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('password', password);
+
+      // Append file data to the form data
+      if (aadharCard) {
+        formData.append('aadharCard', aadharCard.fileData, aadharCard.fileName);
+      }
+      if (bankPassbook) {
+        formData.append('bankPassbook', bankPassbook.fileData, bankPassbook.fileName);
+      }
+      if (twelfthMarksheet) {
+        formData.append('twelfthMarksheet', twelfthMarksheet.fileData, twelfthMarksheet.fileName);
+      }
+      if (tenthMarksheet) {
+        formData.append('tenthMarksheet', tenthMarksheet.fileData, tenthMarksheet.fileName);
+      }
+
+      // Send the form data to your backend server
+      const response = await fetch('/your-backend-endpoint', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.ok) {
+        Alert.alert('Enrollment Submitted');
+        // Reset form fields or navigate to another screen
+      } else {
+        Alert.alert('Error submitting enrollment');
+      }
+    } catch (error) {
+      console.error('Error submitting enrollment:', error);
+      Alert.alert('Error submitting enrollment');
+    }
+  };
 
   // Sample data for FlatList
   const data = [
@@ -71,10 +143,38 @@ const Enrollment = () => {
     { key: '11', label: 'Email', value: email, onChangeText: setEmail },
     { key: '12', label: 'Phone Number', value: phone, onChangeText: setPhone },
     { key: '13', label: 'Password', value: password, onChangeText: setPassword, secureTextEntry: true },
-    { key: '14', label: 'Aadhar Card', value: aadharCard ? 'Aadhar Card Uploaded' : 'Upload Aadhar Card', onPress: handleFilePick },
-    { key: '15', label: 'Bank Passbook', value: bankPassbook ? 'Bank Passbook Uploaded' : 'Upload Bank Passbook', onPress: handleFilePick },
-    { key: '16', label: '12th Marksheet', value: twelfthMarksheet ? '12th Marksheet Uploaded' : 'Upload 12th Marksheet', onPress: handleFilePick },
-    { key: '17', label: '10th Marksheet', value: tenthMarksheet ? '10th Marksheet Uploaded' : 'Upload 10th Marksheet', onPress: handleFilePick },
+    {
+      key: '14',
+      label: 'Aadhar Card',
+      value: aadharCard
+        ? `${aadharCard.fileName} (${(aadharCard.fileSize / 1024).toFixed(2)} KB)`
+        : 'Upload Aadhar Card',
+      onPress: () => handleFilePick('14'),
+    },
+    {
+      key: '15',
+      label: 'Bank Passbook',
+      value: bankPassbook
+        ? `${bankPassbook.fileName} (${(bankPassbook.fileSize / 1024).toFixed(2)} KB)`
+        : 'Upload Bank Passbook',
+      onPress: () => handleFilePick('15'),
+    },
+    {
+      key: '16',
+      label: '12th Marksheet',
+      value: twelfthMarksheet
+        ? `${twelfthMarksheet.fileName} (${(twelfthMarksheet.fileSize / 1024).toFixed(2)} KB)`
+        : 'Upload 12th Marksheet',
+      onPress: () => handleFilePick('16'),
+    },
+    {
+      key: '17',
+      label: '10th Marksheet',
+      value: tenthMarksheet
+        ? `${tenthMarksheet.fileName} (${(tenthMarksheet.fileSize / 1024).toFixed(2)} KB)`
+        : 'Upload 10th Marksheet',
+      onPress: () => handleFilePick('17'),
+    },
   ];
 
   return (

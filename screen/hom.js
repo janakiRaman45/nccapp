@@ -4,6 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ClientNewsPage from "./clientNews";
+import UserCalendar from "./aCallender";
+import ArmyRankGallery from "./ranks";
+import NccSongLyrics from "./song";
 
 
 const Home = () => {
@@ -11,7 +14,7 @@ const Home = () => {
     const route = useRoute();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const drawerAnimation = new Animated.Value(0);
-    const [userName, setUserName] = useState("Admin");
+    const [userName, setUserName] = useState("");
 
     useEffect(() => {
         if (isDrawerOpen) {
@@ -73,31 +76,31 @@ const Home = () => {
             <Animated.View style={[styles.drawer, { transform: [{ translateX: drawerTranslateX }] }]}>
                 <TouchableOpacity
                     style={styles.drawerOption}
-                    onPress={() => handleMenuOptionPress('HomeScreen')}
-                    disabled={route.name === 'HomeScreen'} 
+                    onPress={() => handleMenuOptionPress('Home')}
+                    disabled={route.name === 'Home'} 
                 >
                     <Text style={styles.txt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
-                    onPress={() => handleMenuOptionPress('GridCalendar')}
-                    disabled={route.name === 'GridCalendar'} 
+                    onPress={() => handleMenuOptionPress(UserCalendar)}
+                    disabled={route.name === 'UserCalendar'} 
                 >
                     <Text style={styles.txt}>Calendar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
-                    onPress={() => handleMenuOptionPress('ArmyRankGallery')}
-                    disabled={route.name === 'ArmyRankGallery'} 
+                    onPress={() => handleMenuOptionPress('ClientNewsPage')}
+                    disabled={route.name === 'ClientNewsPage'} 
                 >
-                    <Text style={styles.txt}>Rank Gallery</Text>
+                    <Text style={styles.txt}>News Page</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}
-                    onPress={() => handleMenuOptionPress('AdminNewsPage')}
-                    disabled={route.name ==='AdminNewsPage'} 
+                    onPress={() => handleMenuOptionPress('ArmyRankGallery')}
+                    disabled={route.name ==='ArmyRankGallery'} 
                 >
-                    <Text style={styles.txt}>News</Text>
+                    <Text style={styles.txt}>Rank Gallery</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.drawerOption}

@@ -1,27 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import firebase from './firebase'; // Import the initialized Firebase instance
 
 const ClientNewsPage = () => {
-  const [newsList, setNewsList] = useState([]);
-
-  useEffect(() => {
-    const newsRef = firebase.database().ref('news/newsItems');
-    newsRef.on('value', (snapshot) => {
-      const newsData = snapshot.val();
-      if (newsData) {
-        const newsItems = Object.entries(newsData).map(([key, value]) => ({
-          id: key,
-          link: value.link,
-          content: value.content,
-        }));
-        setNewsList(newsItems);
-      }
-    });
-
-    // Unsubscribe on unmount
-    return () => newsRef.off('value');
-  }, []);
+  const newsList = [
+    {
+      id: '1',
+      link: 'https://timesofindia.indiatimes.com/city/delhi/less-crowded-arvind-kejriwal-housed-in-jail-no-2-meant-for-convicts/articleshow/108958389.cms',
+      content: 'NEW DELHI: A cell measuring 14 feet x 8 feet in Tihars Jail No. 2 is CM Arvind Kejriwals home for the next two weeks. He was sent into judicial custody on Monday. The cell has an attached toilet and is located in the general area of the prison meant for convicts. Housing around 600 individuals, the complex is less crowded than the jails meant for under-trial prisoners and has thus been chosen to house Kejriwal..',
+    }
+  ];
 
   const handleLinkPress = (link) => {
     Linking.openURL(link);

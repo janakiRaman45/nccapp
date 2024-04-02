@@ -24,14 +24,14 @@ const Login = () => {
 
     const handleGuest = () => {
         console.log('Logging in as a guest...');
-        navigation.navigate('PdfList');
+        navigation.navigate('Home');
     }; 
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Image
-                    source={require('../assets/ncclogo.jpg')} // left image
+                    source={require('../assets/skc imae.jpg')} // left image
                     style={styles.image}
                 />
                 <Text style={styles.title}>SKC - NCC</Text>

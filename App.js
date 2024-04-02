@@ -7,7 +7,7 @@ import Registration from './screen/Register';
 import GridCalendar from './screen/calendar';
 import HomeScreen from './screen/Home';
 import ArmyRankGallery from './screen/ranks';
-//import UserCalendar from './screen/aCallender';
+import UserCalendar from './screen/aCallender';
 import AdminNewsPage from './screen/Anews';
 import ArmyRanks from './screen/ArmyRank';
 import PDFPage from './screen/pdf';
@@ -15,6 +15,9 @@ import NavyRank from './screen/NavyRank';
 import Enrollment from './screen/Enroll';
 import Airforce from './screen/Airforce';
 import PdfList from './screen/pdf';
+import ClientNewsPage from './screen/clientNews';
+import Home from './screen/hom';
+import NccSongLyrics from './screen/song';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +37,10 @@ const App = () => {
         <Stack.Screen name="Enrollment" component={Enrollment} options={{headerShown: false}} />
         <Stack.Screen name="Airforce" component={Airforce} options={{headerShown: false}}/>
         <Stack.Screen name="PdfList" component={PdfList} />
+        <Stack.Screen name="ClientNewsPage" component={ClientNewsPage}  />
+        <Stack.Screen name="UserCalendar" component={UserCalendar} options={{headerShown: false}}/>
+        <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
+        <Stack.Screen name="NccSongLyrics" component={NccSongLyrics} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
